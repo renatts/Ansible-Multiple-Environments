@@ -10,7 +10,10 @@
 * On `.env` creating use variables file for your  `OKTA`,  `PostgreSQL`,  `Hosts`  and other sensitive data.
 * Encrypt the variables file by using Ansible vault `sudo ansible-vault encrypt variables.yml` (example).
 * To use `ipify_facts` install: `ansible-galaxy collection install community.general`
-* Run playbook with `sudo ansible-playbook -i ./inventory playbook.yml` command (while your variables file is decrypted).
+* Check the hosts connection `ansible -i ./ansible/environments/staging/inventory all -u ubuntu -m ping` for staging env.
+* Check the hosts connection `ansible -i ./ansible/environments/production/inventory all -u ubuntu -m ping` for production env.
+* Run playbook with `ansible-playbook -i ./environments/staging/inventory playbook.yml` command for deployment to staging (while your variables file is decrypted). 
+* Run playbook with `ansible-playbook -i ./environments/production/inventory playbook.yml` command for deployment to production (while your variables file is decrypted).
 
 ---
 
