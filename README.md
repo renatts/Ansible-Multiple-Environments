@@ -1,5 +1,7 @@
 #  <img src="https://img.shields.io/static/v1?label=&message=Ansible&color=black" width="100" height="35"/>  Configuration Management (Node Weight Tracker) Staging and Production Environments
 
+![ansible_tree](https://user-images.githubusercontent.com/83014719/139578986-3b2ef820-2d45-4627-9533-6e1ad2a41a00.png)
+
 ### Install Ansible
 * Run `sudo apt update` and `sudo apt upgrade`
 * [Download and install](https://linuxhint.com/begineers_guide_tutorial_ansible/) `ansible` on your linux virtual machine (controller).
@@ -8,7 +10,12 @@
 * On `.env` creating use variables file for your  `OKTA`,  `PostgreSQL`,  `Hosts`  and other sensitive data.
 * Encrypt the variables file by using Ansible vault `sudo ansible-vault encrypt variables.yml` (example).
 * To use `ipify_facts` install: `ansible-galaxy collection install community.general`
-* Run playbook with `sudo ansible-playbook -i ./inventory playbook.yml` command (while your variables file is decrypted).
+* Create `vault.yml` file for your secret variables (one for each environment):
+* ![vault_example](https://user-images.githubusercontent.com/83014719/139579823-497ea648-c0c9-4fac-bcf9-19e4acf90709.png)
+* Check the hosts connection `ansible -i ./ansible/environments/staging/inventory all -u ubuntu -m ping` for staging env.
+* Check the hosts connection `ansible -i ./ansible/environments/production/inventory all -u ubuntu -m ping` for production env.
+* Run playbook with `ansible-playbook -i ./environments/staging/inventory playbook.yml` command for deployment to staging (while your variables file is decrypted). 
+* Run playbook with `ansible-playbook -i ./environments/production/inventory playbook.yml` command for deployment to production (while your variables file is decrypted).
 
 ---
 
@@ -41,4 +48,7 @@ This sample application demonstrates the following technologies.
 1. Copy `.env.sample` to `.env` and change the `OKTA_*` values to your application
 1. Initialize the PostgreSQL database by running `npm run initdb`
 1. Run `npm run dev` to start Node.js
+
+
+
 
