@@ -1,5 +1,7 @@
 #  <img src="https://img.shields.io/static/v1?label=&message=Ansible&color=black" width="100" height="35"/>  Configuration Management (Node Weight Tracker) Staging and Production Environments
 
+![ansible_tree](https://user-images.githubusercontent.com/83014719/139578986-3b2ef820-2d45-4627-9533-6e1ad2a41a00.png)
+
 ### Install Ansible
 * Run `sudo apt update` and `sudo apt upgrade`
 * [Download and install](https://linuxhint.com/begineers_guide_tutorial_ansible/) `ansible` on your linux virtual machine (controller).
@@ -41,4 +43,5 @@ This sample application demonstrates the following technologies.
 1. Copy `.env.sample` to `.env` and change the `OKTA_*` values to your application
 1. Initialize the PostgreSQL database by running `npm run initdb`
 1. Run `npm run dev` to start Node.js
+
 
