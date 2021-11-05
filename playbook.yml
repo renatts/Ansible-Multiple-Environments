@@ -2,41 +2,33 @@
  - hosts: all
    become: yes
    remote_user: ubuntu
-   vars_files:
-     - '~/ansible/environments/{{ var_env }}/vault.yml'
-
-
    tasks:
-   - name: Deploy from git repo
-     git:
-       force: yes
-       repo: '{{ git_repo }}'
-       dest: '{{ deploy_directory }}'
-
-   - name: Update nodejs package
-     shell: curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-
-   - name: Install nodejs
-     apt:
-       name: nodejs
-       state: present
-
-   - name: Npm initialization
-     shell: npm init -y
-     args:
-       chdir: '{{ deploy_directory }}/'
-
-   - name: Install node dependencies
-     shell: npm install
-     args:
-       chdir: '{{ deploy_directory }}/'
-
    - name: Get public IP
      community.general.ipify_facts:
 
+   - name: Delete previous deploy directory
+     file: 
+       path: '{{ deploy_directory }}'
+       state: absent
+       
+   - name: Create Directory
+     file: 
+       path: /home/bootcamp/
+       state: directory
+       mode: '0755'
+
+   - name: Sync between the control machine and remote host
+     ansible.posix.synchronize:
+       src:  /home/agent/agent/_work/r2/a/bootcamp-app
+       dest: /home/bootcamp/
+       
+   - name: Sleep 5 seconds and continue
+     wait_for:
+       timeout: 5  
+
    - name: Create environment variables file
      copy:
-       dest: "{{ deploy_directory }}/.env"
+       dest: /home/bootcamp/bootcamp-app/.env
        content: |
          PORT={{ http_port }}
          HOST='0.0.0.0'
@@ -59,6 +51,12 @@
      args:
        chdir: '{{ deploy_directory }}/'
 
+   - name: Install nodemon
+     npm:
+       name: nodemon
+       state: present
+       global: yes    
+
    - name: Install pm2
      shell: npm install pm2 -g
 
@@ -69,7 +67,7 @@
    - name: Run application
      shell: pm2 start npm -- run dev && pm2 save && pm2 startup
      args:
-       chdir: '{{ deploy_directory }}/'
+       chdir: bootcamp-app/
 
    - name: Reboot
      reboot:
